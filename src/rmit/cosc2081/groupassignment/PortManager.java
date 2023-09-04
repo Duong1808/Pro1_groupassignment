@@ -1,8 +1,5 @@
 package rmit.cosc2081.groupassignment;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -50,17 +47,8 @@ public class PortManager extends User{
 
         System.out.println("==================== END =====================");
 
-        PortManager portManager = new PortManager(username, password, "manager", null);
 
-        try {
-            FileWriter fileWriter = new FileWriter("managers.txt", true);
-            PrintWriter printWriter = new PrintWriter(fileWriter);
-            printWriter.println(portManager.getUsername() + " " + portManager.getPassword() + " " + portManager.getRole());
-            printWriter.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return portManager;
+        return new PortManager(username, password, "manager", null);
     }
 
     public String hashPassword(String password) {

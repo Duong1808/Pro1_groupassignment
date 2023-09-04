@@ -1,7 +1,6 @@
 package rmit.cosc2081.groupassignment;
 
 import java.io.IOException;
-import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class PortManagementSystem {

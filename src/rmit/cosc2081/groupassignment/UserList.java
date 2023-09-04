@@ -27,11 +27,11 @@ public class UserList {
     private void printAdminMenu() {
         System.out.println("1. Add New Port Manager");
         System.out.println("2. View All Port Managers");
+        System.out.println("3. Remove Port Manager By Username");
         System.out.println("0. Exit");
     }
 
     public void showAdminTasks() {
-        ArrayList<PortManager> managers = new ArrayList<>();
         Scanner scan = new Scanner(System.in);
         boolean flag = true;
         do {
@@ -40,16 +40,15 @@ public class UserList {
             int selected = Integer.parseInt(scan.nextLine());
             switch (selected) {
                 case 1 -> {
-                    PortManager portManager = PortManager.createPortManager();
-                    if (usernameExists(portManager.getUsername())) {
-                        System.out.println("Username already exists. Please choose a different username.");
-                    } else {
-                        this.listOfUser.add(portManager);
-                    }
+                    addPortManager();
                     break;
                 }
                 case 2 -> {
                     showManagerList();
+                    break;
+                }
+                case 3 -> {
+                    removePortManager();
                     break;
                 }
                 case 0 -> flag = false;
@@ -58,32 +57,80 @@ public class UserList {
         } while (flag);
     }
 
+    public void removePortManager() {
+        Scanner scan = new Scanner(System.in);
+        System.out.println("------------- Remove Port Manager ----------------");
+        System.out.println("Please enter Username of Manager: ");
+        String username = scan.nextLine();
+        PortManager manager = findManagerByUsername(username);
+        if (manager != null) {
+            this.listOfUser.remove(manager);
+            writeToFile();
+            System.out.println("The Manager is removed successfully");
+        } else {
+            System.out.println("The Username not found");
+        }
+    }
+
+    public void writeToFile() {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("managers.txt"))) {
+            for (User user : listOfUser) {
+                if (user instanceof PortManager manager) {
+                    bufferedWriter.write(manager.getUsername() + " " + manager.getPassword() + " " + manager.getRole() + "\n");
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public PortManager findManagerByUsername(String username) {
+        for (User user : listOfUser) {
+            if (user instanceof PortManager manager && manager.getUsername().equalsIgnoreCase(username)) {
+                return manager;
+            }
+        }
+        return null;
+    }
+
+    public void addPortManager() {
+        PortManager portManager = PortManager.createPortManager();
+        if (usernameExists(portManager.getUsername())) {
+            System.out.println("Username already exists. Please choose a different username.");
+        } else {
+            this.listOfUser.add(portManager);
+            try {
+                FileWriter fileWriter = new FileWriter("managers.txt", true);
+                PrintWriter printWriter = new PrintWriter(fileWriter);
+                printWriter.println(portManager.getUsername() + " " + portManager.getPassword() + " " + portManager.getRole());
+                printWriter.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     public boolean usernameExists(String username) {
         readAdminFromFile("admin.txt");
         readPortManagersFromFile("managers.txt");
-        for (User user : this.listOfUser) {
-            if (user.getUsername().equals(username)) {
-                return true;
-            }
-        }
-        return false;
+        String lowercaseUsername = username.toLowerCase();
+        return listOfUser.stream().anyMatch(user -> user.getUsername().toLowerCase().equals(lowercaseUsername));
     }
 
     public void showManagerList() {
+        clearPortManagers(); // Clear the existing port managers when calling to many times
         readPortManagersFromFile("managers.txt");
         for (User user : this.listOfUser) {
-            if(user.getRole().equals("manager")){
+            if (user.getRole().equals("manager")) {
                 user.output();
             }
         }
     }
 
-    //5. main tasks
-    public void add(User user) {
-        readAdminFromFile("admin.txt");
-        readPortManagersFromFile("managers.txt");
-        this.listOfUser.add(user);
+    public void clearPortManagers() {
+        this.listOfUser.removeIf(user -> user instanceof PortManager);
     }
+
+
 
     public User authenticate() {
         readAdminFromFile("admin.txt");
