@@ -1,14 +1,13 @@
 package rmit.cosc2081.groupassignment;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 public class PortManagementSystem {
-    public static void main(String[] args) throws IOException, ClassNotFoundException {
+    public static void main(String[] args) {
         doMenu();
     }
 
-    private static void printMenu(){
+    private static void printMenu() {
         System.out.println("WELCOME TO THE PORT MANAGEMENT SYSTEM:");
         System.out.println("Please choose number to execute task: ");
         System.out.println("1. LOGIN");
@@ -26,9 +25,13 @@ public class PortManagementSystem {
             int num = Integer.parseInt(scan.nextLine());
             switch (num) {
                 case 1 -> {
-                    authenticatedUser = users.authenticate();
+                    System.out.println("Enter your Username: ");
+                    String username = scan.nextLine();
+                    System.out.println("Enter your Password: ");
+                    String password = scan.nextLine();
+                    authenticatedUser = users.authenticate(username, password);
                     if (authenticatedUser == null) {
-                        System.out.println("Authentication failed. Please try again.");
+                        System.out.println("Please try again.");
                     } else {
                         if (authenticatedUser.getRole().equals("admin")) {
                             users.showAdminTasks();
@@ -49,5 +52,4 @@ public class PortManagementSystem {
             }
         } while (flag);
     }
-
 }

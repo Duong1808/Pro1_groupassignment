@@ -1,12 +1,6 @@
 package rmit.cosc2081.groupassignment;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class User {
+public abstract class User {
 
     //1.attributes
     private String username;
@@ -18,6 +12,9 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public User() {
     }
 
 
@@ -34,13 +31,23 @@ public class User {
     public String getRole() {
         return role;
     }
-    //4. input and output
 
-
-    public void output() {
-        System.out.println("Nothing to Print");
+    public void setUsername(String username) {
+        this.username = username;
     }
 
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    //4. input and output
+    public void output() {
+        System.out.println("User Class Not Defined");
+    }
     //5. main tasks
 
 }

@@ -1,8 +1,8 @@
 package rmit.cosc2081.groupassignment;
-
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,26 +31,38 @@ public class PortManager extends User{
 
 
     //4. input, output
-    public static PortManager createPortManager() {
+    public static PortManager createPortManager(ArrayList<PortManager> managers) {
         Scanner scan = new Scanner(System.in);
         System.out.println("==================== ADD PORT MANAGER =====================");
-        System.out.println("Please input the Username: ");
-        String username = scan.nextLine().toLowerCase();
-
-        System.out.println("Please input Password: ");
-        String password = scan.nextLine();
-        while (!isValidPassword(password)) {
-            System.out.println("Invalid password format.\nPassword must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8 and 20 characters long.");
-            System.out.println("Please input Password Again: ");
-            password = scan.nextLine();
+        String username;
+        while (true) {
+            System.out.println("Please input the Username: ");
+            username = scan.nextLine().toLowerCase();
+            if (!usernameExists(managers, username)) {
+                break;
+            } else {
+                System.out.println("Username already exists. Please choose a different username.");
+            }
         }
-
+        String password;
+        while (true) {
+            System.out.println("Please input Password: ");
+            password = scan.nextLine();
+            if (isValidPassword(password)) {
+                break;
+            } else {
+                System.out.println("Invalid password format.\nPassword must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8 and 20 characters long.");
+            }
+        }
         System.out.println("==================== END =====================");
-
-
         return new PortManager(username, password, "manager", null);
     }
 
+
+    public static boolean usernameExists(ArrayList<PortManager> managers, String username) {
+        String lowercaseUsername = username.toLowerCase();
+        return managers.stream().anyMatch(user -> user.getUsername().toLowerCase().equals(lowercaseUsername));
+    }
     public String hashPassword(String password) {
         try {
             MessageDigest md = MessageDigest.getInstance("SHA-256");
