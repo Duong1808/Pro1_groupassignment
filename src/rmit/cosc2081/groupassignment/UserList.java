@@ -73,6 +73,7 @@ public class UserList {
         System.out.println("5. Unload Container From Vehicle");
         System.out.println("6. Move To Port");
         System.out.println("7. Refuel Vehicle");
+        System.out.println("8. Calculate Fuel Consumption In A Day");
         System.out.println("0. Exit Vehicle Menu");
     }
 
@@ -208,6 +209,9 @@ public class UserList {
                 }
                 case 7 -> {
                     refuelVehicle(vehicles);
+                }
+                case 8 -> {
+                    calculateTotalFuelConsumptionInADay(trips);
                 }
                 case 0 -> flag = false;
                 default -> System.out.println("Please enter the valid option!!!");
