@@ -13,9 +13,9 @@ public class PortManager extends User{
     private Port port;
     //2.constructor
 
-    public PortManager(String username, String password, String role, Port port) {
+    public PortManager(String username, String password, Port port) {
         super(username, password);
-        this.role = "manager";
+        this.setRole("manager");
         this.port = port;
     }
 
@@ -55,7 +55,7 @@ public class PortManager extends User{
             }
         }
         System.out.println("==================== END =====================");
-        return new PortManager(username, password, "manager", null);
+        return new PortManager(username, password, null);
     }
 
 
@@ -90,7 +90,9 @@ public class PortManager extends User{
     public void output() {
         System.out.print("Username: "+ this.getUsername());
         System.out.print("\tPassword: "+ hashPassword(this.getPassword()));
-        System.out.println("\tRole: "+ this.getRole()+"\n");
+        System.out.print("\tRole: "+ this.getRole());
+        System.out.print("\tPort: "+ this.getPort().getPortID());
+        System.out.println();
     }
     //5. main tasks
 }

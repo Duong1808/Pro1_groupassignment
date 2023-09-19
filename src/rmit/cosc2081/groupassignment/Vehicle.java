@@ -1,7 +1,11 @@
 package rmit.cosc2081.groupassignment;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import static rmit.cosc2081.groupassignment.Container.findContainerByID;
+import static rmit.cosc2081.groupassignment.Port.findPortByID;
 
 public class Vehicle {
     private String vehicleID;
@@ -9,11 +13,21 @@ public class Vehicle {
     private double fuelAmount;
     private double carryingCapability;
     private double fuelCapability;
-    private String currentPort;
+    private Port currentPort = null;
     private ArrayList<Container> containers;
     private int numCons;
 
-    public Vehicle(String vehicleID, String vehicleName, double fuelAmount, double carryingCapability, double fuelCapability, String currentPort, ArrayList<Container> containers) {
+    private String vehicleType;
+
+    public String getVehicleType() {
+        return vehicleType;
+    }
+
+    public void setVehicleType(String vehicleType) {
+        this.vehicleType = vehicleType;
+    }
+
+    public Vehicle(String vehicleID, String vehicleName, double fuelAmount, double carryingCapability, double fuelCapability, Port currentPort, ArrayList<Container> containers) {
         this.vehicleID = vehicleID;
         this.vehicleName = vehicleName;
         this.fuelAmount = fuelAmount;
@@ -66,11 +80,11 @@ public class Vehicle {
         this.fuelCapability = fuelCapability;
     }
 
-    public String getCurrentPort() {
+    public Port getCurrentPort() {
         return currentPort;
     }
 
-    public void setCurrentPort(String currentPort) {
+    public void setCurrentPort(Port currentPort) {
         this.currentPort = currentPort;
     }
 
@@ -82,10 +96,48 @@ public class Vehicle {
         this.containers = containers;
     }
 
-    public static Vehicle createVehicle(ArrayList<Container> containers){
+    public static Vehicle removeVehicle(ArrayList<Vehicle> vehicles) {
         Scanner scan = new Scanner(System.in);
-        System.out.println("Enter the vehicle ID: ");
+        System.out.println("------------- Remove Vehicle ----------------");
+        System.out.println("Please enter Vehicle ID: ");
         String vehicleID = scan.nextLine();
+        Vehicle vehicle = findVehicleByID(vehicleID, vehicles);
+        if (vehicle != null) {
+            vehicles.remove(vehicle);
+            updateFileVehicle(vehicles);
+            System.out.println("The Vehicle is removed successfully");
+        } else {
+            System.out.println("The Vehicle not found");
+        }
+        return vehicle;
+    }
+
+    public static Vehicle findVehicleByID(String vehicleID, ArrayList<Vehicle> vehicles) {
+        for (Vehicle vehicle : vehicles) {
+            if (vehicle.getVehicleID().equalsIgnoreCase(vehicleID)) {
+                return vehicle;
+            }
+        }
+        return null;
+    }
+
+
+    public static Vehicle createVehicle(ArrayList<Vehicle> vehicles) {
+        Scanner scan = new Scanner(System.in);
+        String vehicleID;
+        do {
+            System.out.println("Enter the vehicle ID (must start with 'sh' or 'tr'): ");
+            vehicleID = scan.nextLine();
+
+            if (!vehicleID.toLowerCase().startsWith("sh") && !vehicleID.toLowerCase().startsWith("tr")) {
+                System.out.println("Check vehicleID format, Start with 'sh' or 'tr'!!!");
+            } else if (vehicleExisted(vehicles, vehicleID)) {
+                System.out.println("Vehicle ID already exists. Please choose a different ID.");
+            } else {
+                break;
+            }
+        } while (true);
+
 
         System.out.println("Enter the vehicle name: ");
         String vehicleName = scan.nextLine();
@@ -99,33 +151,74 @@ public class Vehicle {
         System.out.println("Enter the fuel capability: ");
         double fuelCapability = Double.parseDouble(scan.nextLine());
 
-        System.out.println("Enter the current port: ");
-        String currentPort = scan.nextLine();
-
-        ArrayList<Container> initialContainers = new ArrayList<>();
-        String addContainers;
-        do {
-            System.out.println("Do you want to add initial containers? (yes/no): ");
-            addContainers = scan.nextLine();
-            if (addContainers.equalsIgnoreCase("yes")) {
-                System.out.println("Please enter container ID: ");
-                String containerID = scan.nextLine();
-                for(Container con : containers){
-                    if(con.getId().equalsIgnoreCase(containerID)){
-                        initialContainers.add(con);
-                    } else {
-                        System.out.println("not existed ID");
-                    }
-                }
+        Vehicle vehicle = null;
+        if (vehicleID.startsWith("sh")) {
+            vehicle = new Ship(vehicleID, vehicleName, fuelAmount, carryingCapability, fuelCapability, null, new ArrayList<>());
+        } else {
+            System.out.println("Select the Truck type:");
+            System.out.println("1. Basic Truck");
+            System.out.println("2. Reefer Truck");
+            System.out.println("3. Tanker Truck");
+            int truckType = Integer.parseInt(scan.nextLine());
+            switch (truckType) {
+                case 1 ->
+                        vehicle = new BasicTruck(vehicleID, vehicleName, fuelAmount, carryingCapability, fuelCapability, null, new ArrayList<>());
+                case 2 ->
+                        vehicle = new ReeferTruck(vehicleID, vehicleName, fuelAmount, carryingCapability, fuelCapability, null, new ArrayList<>());
+                case 3 ->
+                        vehicle = new TankerTruck(vehicleID, vehicleName, fuelAmount, carryingCapability, fuelCapability, null, new ArrayList<>());
+                default -> System.out.println("Invalid container type selection.");
             }
-        } while (!addContainers.equalsIgnoreCase("no"));
-        return new Vehicle(vehicleID, vehicleName, fuelAmount, carryingCapability, fuelCapability, currentPort, initialContainers);
+        }
+        if(vehicle != null){
+            writeToFileVehicle(vehicle);
+        }
+        return vehicle;
     }
 
+    public static void writeToFileVehicle(Vehicle vehicle) {
+        try {
+            FileWriter fileWriter = new FileWriter("vehicles.txt");
+            PrintWriter printWriter = new PrintWriter(fileWriter);
 
-    public void showContainers(){
-        for(Container con : this.getContainers()){
-            System.out.println(con.toString());
+            StringBuilder containerIDsBuilder = new StringBuilder();
+            for (Container container : vehicle.getContainers()) {
+                if (containerIDsBuilder.length() > 0) {
+                    containerIDsBuilder.append(", ");
+                }
+                containerIDsBuilder.append(container.getId());
+            }
+            String containerIDs = containerIDsBuilder.toString();
+
+            printWriter.println(vehicle.getVehicleID() + " " + vehicle.getVehicleName() + " " +
+                    vehicle.getVehicleType() + " " + vehicle.getFuelAmount() + " " +
+                    vehicle.getCarryingCapability() + " " + vehicle.getFuelCapability() + " " +
+                    vehicle.getCurrentPort().getPortID() + " [" + containerIDs + "]");
+            printWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void updateFileVehicle(ArrayList<Vehicle> vehicles) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("vehicles.txt"))) {
+            for (Vehicle vehicle : vehicles) {
+                StringBuilder containerIDsBuilder = new StringBuilder();
+                for (Container container : vehicle.getContainers()) {
+                    if (containerIDsBuilder.length() > 0) {
+                        containerIDsBuilder.append(", ");
+                    }
+                    containerIDsBuilder.append(container.getId());
+                }
+                String containerIDs = containerIDsBuilder.toString();
+
+                bufferedWriter.write(vehicle.getVehicleID() + " " + vehicle.getVehicleName() + " " +
+                        vehicle.getVehicleType() + " " + vehicle.getFuelAmount() + " " +
+                        vehicle.getCarryingCapability() + " " + vehicle.getFuelCapability() + " " +
+                        vehicle.getCurrentPort().getPortID() + " [" + containerIDs + "]\n");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -133,34 +226,79 @@ public class Vehicle {
     @Override
     public String toString() {
         return "Vehicle{" +
-                "vehicleName='" + vehicleName + '\'' +
+                "vehicleID='" + vehicleID + '\'' +
+                ", vehicleName='" + vehicleName + '\'' +
+                ", vehicleType='" + vehicleType + '\'' +
                 ", fuelAmount=" + fuelAmount +
                 ", carryingCapability=" + carryingCapability +
                 ", fuelCapability=" + fuelCapability +
-                ", currentPort='" + currentPort + '\'' +
+                ", currentPort='" + getCurrentPort() + '\'' +
+                ", containers=" + getContainers() +
                 '}';
     }
 
-    public static void main(String[] args) {
+    public static void clearVehicles(ArrayList<Vehicle> vehicles) {
+        vehicles.removeIf(vehicle -> vehicle != null);
+    }
 
-//            Container container1 = Container.createContainer();
+    public static boolean vehicleExisted(ArrayList<Vehicle> vehicles, String vehicleID) {
+        String lowercaseID = vehicleID.toLowerCase();
+        return vehicles.stream().anyMatch(vehicle -> vehicle.getVehicleID().toLowerCase().equals(lowercaseID));
+    }
 
-//            System.out.println(container1.toString());
-//        System.out.println(container1.getType());
-//        System.out.println(container1.getTruckFuelConsumptionPerKm());
-//        System.out.println(container1.getShipFuelConsumptionPerKm());
-//        System.out.println(container1.calculateShipFuelConsumption());
-//        System.out.println(container1.calculateTruckFuelConsumption());
-//            Vehicle vehicle1 = createVehicle(containers);
-//            ArrayList<Vehicle> vehicles = new ArrayList<>();
-//            vehicles.add(vehicle1);
-//            for(Vehicle veh : vehicles){
-//                System.out.println(veh.toString());
-//                veh.showContainers();
-//            }
-//        Trip trip2 = new Trip("tr02",vehicles,"delivered",1,1,"22/09/2023","22/10/2023","19/09/2023");
-//        Trip trip1 = new Trip("tr01",vehicles,"delivered",1,1,"22/09/2023","22/10/2023","19/09/2023");
-//        trips.add(trip1);
-//        trips.add(trip2);
+    public static void readVehiclesFromFile(String filename, ArrayList<Vehicle> vehicles, ArrayList<Container> containers, ArrayList<Port> ports) {
+        try {
+            FileReader fileReader = new FileReader(filename);
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            String line;
+
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] parts = line.split(" ");
+                if (parts.length >= 7) {
+                    String vehicleID = parts[0];
+                    String vehicleName = parts[1];
+                    String vehicleType = parts[2];
+                    double fuelAmount = Double.parseDouble(parts[3]);
+                    double carryingCapability = Double.parseDouble(parts[4]);
+                    double fuelCapability = Double.parseDouble(parts[5]);
+                    String portID = parts[6];
+                    Port port = findPortByID(portID, ports);
+                    if (port != null) {
+                        Vehicle vehicle;
+                        if (vehicleType.equalsIgnoreCase("ship")) {
+                            vehicle = new Ship(vehicleID, vehicleName, fuelAmount, carryingCapability, fuelCapability, port, new ArrayList<>());
+                        } else if (vehicleType.equalsIgnoreCase("basic")) {
+                            vehicle = new BasicTruck(vehicleID, vehicleName, fuelAmount, carryingCapability, fuelCapability, port, new ArrayList<>());
+                        } else if (vehicleType.equalsIgnoreCase("reefer")) {
+                            vehicle = new ReeferTruck(vehicleID, vehicleName, fuelAmount, carryingCapability, fuelCapability, port, new ArrayList<>());
+                        } else if (vehicleType.equalsIgnoreCase("tanker")) {
+                            vehicle = new TankerTruck(vehicleID, vehicleName, fuelAmount, carryingCapability, fuelCapability, port, new ArrayList<>());
+                        } else {
+                            System.out.println("Invalid vehicle type: " + vehicleType);
+                            break;
+                        }
+
+                        for (int i = 7; i < parts.length; i++) {
+                            String[] containerIDs = parts[i].replaceAll("[\\[\\]]", "").split(",");
+                            for (String containerID : containerIDs) {
+                                Container container = findContainerByID(containerID, containers);
+                                if (container != null) {
+                                    vehicle.getContainers().add(container);
+                                } else {
+                                    System.out.println("Container not found: " + containerID);
+                                }
+                            }
+                        }
+                        vehicles.add(vehicle);
+                        port.getVehicles().add(vehicle);
+                    } else {
+                        System.out.println("Port not found: " + portID);
+                    }
+                }
+            }
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -1,8 +1,6 @@
 package rmit.cosc2081.groupassignment;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -10,7 +8,6 @@ public class Container {
     private String type;
     private String containerID;
     private double weight;
-
 
     public String getType() {
         return type;
@@ -62,9 +59,45 @@ public class Container {
         return 0.0;
     }
 
+    public static Container removeContainer(ArrayList<Container> containers){
+        Scanner scan = new Scanner(System.in);
+        System.out.println("------------- Remove Container ----------------");
+        System.out.println("Please enter Container ID: ");
+        String containerID = scan.nextLine();
+        Container container = findContainerByID(containerID, containers);
+        if (container != null) {
+            containers.remove(container);
+            updateFileContainer(containers);
+            System.out.println("The Container is removed successfully");
+        } else {
+            System.out.println("The Container not found");
+        }
+        return container;
+    }
+
+    public static void updateFileContainer(ArrayList<Container> containers) {
+        try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("containers.txt"))) {
+            for (Container container : containers) {
+                    bufferedWriter.write(container.getId() + " " + container.getWeight() + " " + container.getType() + "\n");
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static Container findContainerByID(String containerID, ArrayList<Container> containers) {
+        for (Container container : containers) {
+            if (container.getId().equalsIgnoreCase(containerID)) {
+                return container;
+            }
+        }
+        return null;
+    }
+
     public static Container createContainer(ArrayList<Container> containers) {
         Scanner scan = new Scanner(System.in);
-        readContainersFromFile("containers.txt",containers);
+        clearContainers(containers);
         String containerID;
         while (true) {
             System.out.println("Please input the Container ID: ");
@@ -94,7 +127,25 @@ public class Container {
             case 5 -> container = new LiquidContainer(containerID, weight);
             default -> System.out.println("Invalid container type selection.");
         }
+        if(container != null){
+            writeToFileContainer(container);
+        }
         return container;
+    }
+
+    public static void writeToFileContainer(Container container){
+        try {
+            FileWriter fileWriter = new FileWriter("containers.txt", true);
+            PrintWriter printWriter = new PrintWriter(fileWriter);
+            printWriter.println(container.getId() + " " + container.getWeight() + " " + container.getType());
+            printWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void clearContainers(ArrayList<Container> containers) {
+        containers.removeIf(container -> container != null);
     }
 
     public static boolean containerExisted(ArrayList<Container> containers, String containerID) {
@@ -144,13 +195,5 @@ public class Container {
                 '}';
     }
 
-    public static void main(String[] args) {
-        ArrayList<Container> containers = new ArrayList<>();
 
-        Container container1 = Container.createContainer(containers);
-        containers.add(container1);
-        for(Container con : containers){
-            System.out.println(con.toString());
-        }
-    }
 }

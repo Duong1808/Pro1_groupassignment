@@ -6,7 +6,7 @@ public class SystemAdmin extends User{
     //2. constructor
     private SystemAdmin() {
         String s = "Hello I am a string part of Singleton class";
-        this.role = "admin";
+        this.setRole("admin");
     };
 
 

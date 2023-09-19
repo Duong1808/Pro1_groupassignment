@@ -1,0 +1,7 @@
+C102 4.6 openSide
+C103 4.7 openTop
+c101 4.5 dryStorage
+c104 5.66 openTop
+c106 6.7 refrigerated
+c107 9.8 liquid
+c111 10.9 refrigerated

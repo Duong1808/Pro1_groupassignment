@@ -5,8 +5,7 @@ public abstract class User {
     //1.attributes
     private String username;
     private String password;
-
-    String role;
+    private String role;
     //2.constructor
 
     public User(String username, String password) {
