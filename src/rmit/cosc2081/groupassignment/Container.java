@@ -99,15 +99,18 @@ public class Container {
         Scanner scan = new Scanner(System.in);
         clearContainers(containers);
         String containerID;
-        while (true) {
+        boolean containerExists;
+
+        do {
             System.out.println("Please input the Container ID: ");
             containerID = scan.nextLine().toLowerCase();
-            if (!containerExisted(containers, containerID)) {
-                break;
-            } else {
+            containerExists = containerExisted(containers, containerID);
+
+            if (containerExists) {
                 System.out.println("Container ID already exists. Please choose a different ID.");
             }
-        }
+        } while (containerExists);
+
         System.out.println("Enter the weight of the container: ");
         double weight = Double.parseDouble(scan.nextLine());
 
@@ -127,7 +130,7 @@ public class Container {
             case 5 -> container = new LiquidContainer(containerID, weight);
             default -> System.out.println("Invalid container type selection.");
         }
-        if(container != null){
+        if (container != null) {
             writeToFileContainer(container);
         }
         return container;

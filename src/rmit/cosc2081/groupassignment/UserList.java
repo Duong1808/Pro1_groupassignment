@@ -443,10 +443,22 @@ public class UserList {
     public void calculateTotalFuelConsumptionInADay(ArrayList<Trip> trips) {
         ArrayList<Trip> tripsForDay = getTripsForDay(trips);
         double totalFuelConsumption = 0.0;
+
         for (Trip trip : tripsForDay) {
-            totalFuelConsumption += (trip.getVehicle().getFuelCapability() - trip.getVehicle().getFuelAmount());
+            Vehicle vehicle = trip.getVehicle();
+            for (Container container : vehicle.getContainers()) {
+                double containerFuelConsumption = 0.0;
+
+                if (vehicle instanceof Ship) {
+                    containerFuelConsumption = container.calculateShipFuelConsumption();
+                } else if (vehicle instanceof Truck) {
+                    containerFuelConsumption = container.calculateTruckFuelConsumption();
+                }
+                totalFuelConsumption += containerFuelConsumption;
+            }
         }
-        System.out.println("totalFuelConsumption: " + totalFuelConsumption);
+
+        System.out.println("Total Fuel Consumption: " + totalFuelConsumption);
     }
 
     public ArrayList<Trip> getTripsForDay(ArrayList<Trip> trips) {
@@ -458,7 +470,7 @@ public class UserList {
             System.out.print("Enter a date (dd-MM-yyyy): ");
             dateInput = scanner.nextLine();
             for (Trip trip : trips) {
-                if (trip.getDepartureDate().equals(dateInput) || trip.getArrivalDate().equals(dateInput)) {
+                if (trip.getDepartureDate().equals(dateInput)) {
                     tripsForDay.add(trip);
                     validDate = true;
                 }

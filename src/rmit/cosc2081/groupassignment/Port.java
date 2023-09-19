@@ -142,28 +142,32 @@ public class Port {
         Scanner scan = new Scanner(System.in);
         String portID;
         do {
-            System.out.println("Enter the vehicle ID (must start with 'P'): ");
+            System.out.println("Enter the port ID (must start with 'P'): ");
             portID = scan.nextLine();
             if (!portID.toLowerCase().startsWith("p")) {
-                System.out.println("Check vehicleID format, Start with 'P'!!!");
+                System.out.println("Check port format, Start with 'P'!!!");
             } else if (portExisted(ports, portID)) {
                 System.out.println("Port ID already exists. Please choose a different ID.");
             } else {
                 break;
             }
         } while (true);
-        System.out.println("Please enter Port Name: ");
+        Port port = null;
+        System.out.println("Please enter group.asm.Port Name: ");
         String portName = scan.nextLine();
-        System.out.println("Please enter the Port Latitude: ");
+        System.out.println("Please enter the group.asm.Port Latitude: ");
         double latitude = Double.parseDouble(scan.nextLine());
-        System.out.println("Please enter the Port Longitude: ");
+        System.out.println("Please enter the group.asm.Port Longitude: ");
         double longitude = Double.parseDouble(scan.nextLine());
-        System.out.println("Please enter the Port Storing Capacity: ");
+        System.out.println("Please enter the group.asm.Port Storing Capacity: ");
         double storingCapacity = Double.parseDouble(scan.nextLine());
         boolean landingAbility = selectLandingAbility(scan);
-        return new Port(portID, portName, latitude, longitude, storingCapacity, landingAbility);
+        port = new Port(portID,portName,latitude,longitude,storingCapacity,landingAbility);
+        if(port != null){
+            writeToFilePort(port);
+        }
+        return port;
     }
-
     public static boolean selectLandingAbility(Scanner scan) {
         System.out.println("Select Landing Ability for this Port: ");
         System.out.println("1. Landing");
