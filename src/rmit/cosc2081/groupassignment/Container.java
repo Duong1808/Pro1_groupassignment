@@ -97,7 +97,6 @@ public class Container {
 
     public static Container createContainer(ArrayList<Container> containers) {
         Scanner scan = new Scanner(System.in);
-        clearContainers(containers);
         String containerID;
         boolean containerExists;
 

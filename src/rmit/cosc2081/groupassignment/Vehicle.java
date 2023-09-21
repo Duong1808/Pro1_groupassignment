@@ -173,12 +173,13 @@ public class Vehicle {
         if(vehicle != null){
             writeToFileVehicle(vehicle);
         }
+        vehicles.add(vehicle);
         return vehicle;
     }
 
     public static void writeToFileVehicle(Vehicle vehicle) {
         try {
-            FileWriter fileWriter = new FileWriter("vehicles.txt");
+            FileWriter fileWriter = new FileWriter("vehicles.txt", true);
             PrintWriter printWriter = new PrintWriter(fileWriter);
 
             StringBuilder containerIDsBuilder = new StringBuilder();
@@ -232,7 +233,7 @@ public class Vehicle {
                 ", fuelAmount=" + fuelAmount +
                 ", carryingCapability=" + carryingCapability +
                 ", fuelCapability=" + fuelCapability +
-                ", currentPort='" + getCurrentPort().getPortID() + '\'' +
+                ", currentPort='" + getCurrentPort() + '\'' +
                 ", containers=" + getContainers() +
                 '}';
     }

@@ -62,7 +62,7 @@ public class PortManagementSystem {
                             if (port == null) {
                                 System.out.println("You must assign a port to perform actions. Please assign a port first.");
                             } else {
-                                users.showManagerTasks(port.getPortID(), ports, containers, trips);
+                                users.showManagerTasks(port.getPortID(), ports, containers, trips, vehicles);
                             }
                         } else {
                             System.out.println("You do not have sufficient permissions.");

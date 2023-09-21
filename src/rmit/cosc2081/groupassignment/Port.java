@@ -15,6 +15,8 @@ public class Port {
     private ArrayList<Container> containers;
     private ArrayList<Trip> trips;
 
+    private PortManager portManager;
+
     public Port(String id, String name, double latitude, double longitude, double storingCapacity, boolean landingAbility) {
         this.portID = id;
         this.name = name;
@@ -28,6 +30,14 @@ public class Port {
     }
 
     public Port() {
+    }
+
+    public PortManager getPortManager() {
+        return portManager;
+    }
+
+    public void setPortManager(PortManager portManager) {
+        this.portManager = portManager;
     }
 
     public String getPortID() {
