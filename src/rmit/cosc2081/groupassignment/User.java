@@ -1,7 +1,8 @@
 package rmit.cosc2081.groupassignment;
 
-public abstract class User {
+import java.util.ArrayList;
 
+public abstract class User  implements UserInterface {
     //1.attributes
     private String username;
     private String password;
@@ -18,7 +19,6 @@ public abstract class User {
 
 
     //3. get, set method
-
     public String getUsername() {
         return username;
     }
@@ -47,6 +47,23 @@ public abstract class User {
     public void output() {
         System.out.println("User Class Not Defined");
     }
-    //5. main tasks
 
+    //5. main tasks
+}
+
+interface UserInterface {
+    String getUsername();
+    String getPassword();
+    String getRole();
+    void setUsername(String username);
+    void setPassword(String password);
+    void setRole(String role);
+    void output();
+}
+
+interface AuthenticationConfigurable {
+    User authenticate(String username, String password, ArrayList<Port> ports);
+    void clearTripsFile();
+    void updateLastLoginDate(String lastLoginFile);
+    boolean isMoreThan7DaysSinceLastLogin(String lastLoginFile);
 }

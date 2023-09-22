@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Container {
+public class Container implements ContainerInterface{
     private String type;
     private String containerID;
     private double weight;
@@ -197,5 +197,19 @@ public class Container {
                 '}';
     }
 
+}
 
+interface ContainerInterface {
+    String getId();
+    double getWeight();
+    double calculateShipFuelConsumption();
+    double calculateTruckFuelConsumption();
+    double getShipFuelConsumptionPerKm();
+    double getTruckFuelConsumptionPerKm();
+}
+
+interface ContainerManagement {
+    void calculateWeightEachContainerType(ArrayList<Container> containers);
+    void loadContainerToVehicle(ArrayList<Vehicle> vehicles, ArrayList<Container> allContainers);
+    void unloadContainerFromVehicle(ArrayList<Vehicle> vehicles);
 }

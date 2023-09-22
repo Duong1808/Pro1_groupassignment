@@ -4,6 +4,7 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -13,7 +14,7 @@ import static rmit.cosc2081.groupassignment.Trip.writeToFileTrip;
 import static rmit.cosc2081.groupassignment.Vehicle.findVehicleByID;
 import static rmit.cosc2081.groupassignment.Vehicle.updateFileVehicle;
 
-public class UserList {
+public class UserList implements ContainerManagement, PortManagement, TripManagement, ManagerModifiable, AuthenticationConfigurable{
     //1. attribute
     private ArrayList<PortManager> listOfManagers;
     //2. constructor
@@ -23,7 +24,6 @@ public class UserList {
     }
 
     //3. get, set methods
-
 
     public ArrayList<PortManager> getListOfManagers() {
         return listOfManagers;
@@ -47,7 +47,7 @@ public class UserList {
 
     private void printManagerMenu() {
         System.out.println("1. Show Container Menu");
-        System.out.println("2. Show Vehicle Menu");
+        System.out.println("2. Show List Of Vehicle Of Manager");
         System.out.println("3. List Ship(s) In Manager Port");
         System.out.println("4. List Trip(s) For A Day");
         System.out.println("5. List Trip(s) From Day A To Day B");
@@ -775,7 +775,6 @@ public class UserList {
         } while (removeContainers.equalsIgnoreCase("yes"));
     }
 
-
     private boolean isContainerLoaded(String containerID, ArrayList<Vehicle> vehicles) {
         for (Vehicle vehicle : vehicles) {
             for (Container container : vehicle.getContainers()) {
@@ -851,11 +850,22 @@ public class UserList {
         readAdminFromFile("admin.txt");
         readPortManagersFromFile("managers.txt", ports);
         SystemAdmin admin = SystemAdmin.getInstance();
+
         if (admin.getUsername().equals(username) && admin.getPassword().equals(password)) {
+            if (isMoreThan7DaysSinceLastLogin("last_login.txt")) {
+                clearTripsFile();
+            }
+
+            updateLastLoginDate("last_login.txt");
+
             return admin;
         } else {
             for (PortManager manager : this.listOfManagers) {
                 if (manager.getUsername().equals(username) && manager.getPassword().equals(password)) {
+                    if (isMoreThan7DaysSinceLastLogin("last_login.txt")) {
+                        clearTripsFile();
+                    }
+                    updateLastLoginDate("last_login.txt");
                     return manager;
                 }
             }
@@ -864,6 +874,45 @@ public class UserList {
         }
     }
 
+    public boolean isMoreThan7DaysSinceLastLogin(String lastLoginFile) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(lastLoginFile))) {
+            String lastLoginDateString = reader.readLine();
+            if (lastLoginDateString == null) {
+                return false;
+            }
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            Date lastLoginDate = dateFormat.parse(lastLoginDateString);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_YEAR, -7);
+            Date sevenDaysAgo = calendar.getTime();
+
+            return lastLoginDate.before(sevenDaysAgo);
+        } catch (IOException | ParseException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public void updateLastLoginDate(String lastLoginFile) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+        String currentDate = dateFormat.format(new Date());
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(lastLoginFile))) {
+            writer.write(currentDate);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void clearTripsFile() {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("trips.txt", false))) {
+            writer.print("");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public void readPortManagersFromFile(String filename, ArrayList<Port> ports) {
         try {
             FileReader fileReader = new FileReader(filename);
@@ -907,4 +956,3 @@ public class UserList {
         }
     }
 }
-

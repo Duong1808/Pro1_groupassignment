@@ -1,6 +1,6 @@
 package rmit.cosc2081.groupassignment;
 
-public class SystemAdmin extends User{
+public class SystemAdmin extends User {
     //1. attributes
     private static SystemAdmin single_instance = null;
     //2. constructor
@@ -23,4 +23,5 @@ public class SystemAdmin extends User{
         System.out.print("Username: "+ this.getUsername());
         System.out.println("\tRole: "+ this.getRole()+"\n");
     }
+
 }

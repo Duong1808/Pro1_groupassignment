@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Port {
+public class Port implements PortInterface{
     private String portID;
     private String name;
     private double latitude;
@@ -163,13 +163,13 @@ public class Port {
             }
         } while (true);
         Port port = null;
-        System.out.println("Please enter group.asm.Port Name: ");
+        System.out.println("Please enter Port Name: ");
         String portName = scan.nextLine();
-        System.out.println("Please enter the group.asm.Port Latitude: ");
+        System.out.println("Please enter the Port Latitude: ");
         double latitude = Double.parseDouble(scan.nextLine());
-        System.out.println("Please enter the group.asm.Port Longitude: ");
+        System.out.println("Please enter the Port Longitude: ");
         double longitude = Double.parseDouble(scan.nextLine());
-        System.out.println("Please enter the group.asm.Port Storing Capacity: ");
+        System.out.println("Please enter the Port Storing Capacity: ");
         double storingCapacity = Double.parseDouble(scan.nextLine());
         boolean landingAbility = selectLandingAbility(scan);
         port = new Port(portID,portName,latitude,longitude,storingCapacity,landingAbility);
@@ -255,5 +255,36 @@ public class Port {
             e.printStackTrace();
         }
     }
+}
 
+interface PortInterface {
+    String getPortID();
+    String getName();
+    double getLatitude();
+    double getLongitude();
+    double getStoringCapacity();
+    boolean isLandingAbility();
+
+    ArrayList<Vehicle> getVehicles();
+    ArrayList<Container> getContainers();
+    ArrayList<Trip> getTrips();
+
+    void setPortID(String portID);
+    void setName(String name);
+    void setLatitude(double latitude);
+    void setLongitude(double longitude);
+    void setStoringCapacity(double storingCapacity);
+    void setLandingAbility(boolean landingAbility);
+
+    void setVehicles(ArrayList<Vehicle> vehicles);
+    void setContainers(ArrayList<Container> containers);
+    void setTrips(ArrayList<Trip> trips);
+
+}
+
+interface PortManagement {
+    void listTrucksInAPort(ArrayList<Port> ports);
+    void listShipsInAPort(ArrayList<Port> ports);
+    boolean canMoveToPort(ArrayList<Vehicle> vehicles, ArrayList<Port> ports, ArrayList<Trip> trips);
+    void refuelVehicle(ArrayList<Vehicle> vehicles);
 }

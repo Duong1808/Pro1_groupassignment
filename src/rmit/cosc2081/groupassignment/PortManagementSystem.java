@@ -33,8 +33,8 @@ public class PortManagementSystem {
         ArrayList<Trip> trips = new ArrayList<>();
         ArrayList<Port> ports = new ArrayList<>();
         clearContainers(containers);
-        clearVehicles(vehicles);
         clearPorts(ports);
+        clearVehicles(vehicles);
         clearTrips(trips);
         readContainersFromFile("containers.txt", containers);
         readPortsFromFile("ports.txt", ports);

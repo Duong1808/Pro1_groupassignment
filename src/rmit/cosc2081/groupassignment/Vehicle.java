@@ -7,7 +7,7 @@ import java.util.Scanner;
 import static rmit.cosc2081.groupassignment.Container.findContainerByID;
 import static rmit.cosc2081.groupassignment.Port.findPortByID;
 
-public class Vehicle {
+public abstract class Vehicle implements VehicleInterface{
     private String vehicleID;
     private String vehicleName;
     private double fuelAmount;
@@ -15,7 +15,6 @@ public class Vehicle {
     private double fuelCapability;
     private Port currentPort = null;
     private ArrayList<Container> containers;
-    private int numCons;
 
     private String vehicleType;
 
@@ -120,7 +119,6 @@ public class Vehicle {
         }
         return null;
     }
-
 
     public static Vehicle createVehicle(ArrayList<Vehicle> vehicles) {
         Scanner scan = new Scanner(System.in);
@@ -305,4 +303,16 @@ public class Vehicle {
             e.printStackTrace();
         }
     }
+}
+
+interface VehicleInterface {
+    String getVehicleID();
+    String getVehicleName();
+    double getFuelAmount();
+    double getCarryingCapability();
+    double getFuelCapability();
+    Port getCurrentPort();
+    ArrayList<Container> getContainers();
+    void setCurrentPort(Port port);
+    void setContainers(ArrayList<Container> containers);
 }

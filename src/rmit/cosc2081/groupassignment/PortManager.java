@@ -86,7 +86,6 @@ public class PortManager extends User{
         return portManager;
     }
 
-
     public static boolean usernameExists(ArrayList<PortManager> managers, String username) {
         String lowercaseUsername = username.toLowerCase();
         return managers.stream().anyMatch(user -> user.getUsername().toLowerCase().equals(lowercaseUsername));
@@ -122,5 +121,12 @@ public class PortManager extends User{
         System.out.print("\tPort: "+ this.getPort().getPortID());
         System.out.println();
     }
-    //5. main tasks
 }
+
+interface ManagerModifiable {
+    void removePortManager();
+    PortManager findManagerByUsername(String username);
+    void addPortManager(ArrayList<Port> ports);
+    void showManagerList(ArrayList<Port> ports);
+}
+

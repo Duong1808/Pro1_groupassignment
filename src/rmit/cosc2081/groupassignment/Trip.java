@@ -5,14 +5,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 import java.util.Scanner;
-import java.util.UUID;
 
 import static rmit.cosc2081.groupassignment.Port.findPortByID;
 import static rmit.cosc2081.groupassignment.Vehicle.findVehicleByID;
 
 
-public class Trip {
+public class Trip implements TripInterface{
     private String tripID;
     private Vehicle vehicle;
     private String departureDate;
@@ -94,7 +94,7 @@ public class Trip {
     public String toString() {
             return "Trip{" +
                     "Trip ID= "+ tripID +
-                    "vehicle=" + vehicle +
+                    "vehicle= " + vehicle +
                     ", departureDate=" + getDepartureDate() +
                     ", arrivalDate=" + getArrivalDate() +
                     ", departurePort=" + departurePort.getPortID() +
@@ -105,6 +105,7 @@ public class Trip {
 
     public static Trip updateTripInformation(ArrayList<Trip> trips, ArrayList<Vehicle> vehicles, ArrayList<Port> ports) {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the Trip ID to update that Trip: ");
         String tripID = scanner.nextLine();
         Trip trip = findTripByID(tripID, trips);
 
@@ -204,7 +205,7 @@ public class Trip {
         Port departurePort = null;
         Port arrivalPort = null;
 
-        String tripID = UUID.randomUUID().toString();
+        String tripID = generateTripID();
 
         do {
             System.out.println("Please enter the Vehicle ID: ");
@@ -241,6 +242,13 @@ public class Trip {
         return new Trip(tripID,vehicle, departureDate, arrivalDate, departurePort, arrivalPort, "INPROGRESS");
     }
 
+    public static String generateTripID() {
+        Random random = new Random();
+        int randomNumber = random.nextInt(90000) + 10000;
+        String tripID = "T" + randomNumber;
+        return tripID;
+    }
+
     public static void clearTrips(ArrayList<Trip> trips) {
         trips.removeIf(trip -> trip != null);
     }
@@ -248,12 +256,10 @@ public class Trip {
         try {
             FileWriter fileWriter = new FileWriter("trips.txt", true);
             PrintWriter printWriter = new PrintWriter(fileWriter);
-
             printWriter.println(trip.getTripID() + " " + trip.getVehicle().getVehicleID() + " " +
                     trip.getDepartureDate() + " " + trip.getArrivalDate() + " " +
                     trip.getDeparturePort().getPortID() + " " + trip.getArrivalPort().getPortID() + " " +
                     trip.getStatus());
-
             printWriter.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -295,7 +301,7 @@ public class Trip {
                     Port portArrival = findPortByID(portArrivalID, ports);
 
                     if (vehicle != null && portDeparture != null && portArrival != null) {
-                        Trip trip = new Trip(tripID,vehicle, dateDeparture, dateArrival, portDeparture, portArrival, status);
+                        Trip trip = new Trip(tripID, vehicle, dateDeparture, dateArrival, portDeparture, portArrival, status);
                         trips.add(trip);
                         portDeparture.getTrips().add(trip);
                         portArrival.getTrips().add(trip);
@@ -303,8 +309,33 @@ public class Trip {
                 }
             }
             bufferedReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception ex) {
+            ex.printStackTrace();
         }
     }
+}
+
+interface TripInterface {
+    String getTripID();
+    Vehicle getVehicle();
+    String getDepartureDate();
+    String getArrivalDate();
+    Port getDeparturePort();
+    Port getArrivalPort();
+    String getStatus();
+
+    void setTripID(String tripID);
+    void setVehicle(Vehicle vehicle);
+    void setDepartureDate(String departureDate);
+    void setArrivalDate(String arrivalDate);
+    void setDeparturePort(Port departurePort);
+    void setArrivalPort(Port arrivalPort);
+    void setStatus(String status);
+}
+
+interface TripManagement {
+    ArrayList<Trip> getTripsBetweenDates(ArrayList<Trip> trips);
+    boolean isDateInRange(String dateString, String rangeStart, String rangeEnd);
+    void calculateTotalFuelConsumptionInADay(ArrayList<Trip> trips);
+    ArrayList<Trip> getTripsForDay(ArrayList<Trip> trips);
 }
