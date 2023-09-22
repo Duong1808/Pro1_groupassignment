@@ -1,5 +1,5 @@
-portmanager01 iammanager manager P01
-portmanager02 iammanager manager P02
-portmanager03 iammanager manager P03
-portmanager04 iammanager manager P04
-portmanager05 iammanager manager P05
+portmanager01 Password1@ P01
+portmanager02 Abcdef1$ manager P02
+portmanager03 SecureP@ss manager P03
+portmanager04 P@ssw0rd12345 manager P04
+portmanager05 MyP@ss1234# manager P05

@@ -18,8 +18,9 @@ public class PortManagementSystem {
     }
 
     private static void printMenu() {
-        System.out.println("WELCOME TO THE PORT MANAGEMENT SYSTEM:");
-        System.out.println("Please choose number to execute task: ");
+        System.out.println("COSC2081 GROUP ASSIGNMENT\nCONTAINER PORT MANAGERMENT SYSTEM\n" +
+                "Instructor: Mr.Minh Vu & Dr.Phong Ngo\nGroup: Team 29\nS3891919, Nguyen A Luy");
+        System.out.println("USER LOGIN (SELECT NUMBER): ");
         System.out.println("1. LOGIN");
         System.out.println("0. Quit");
     }

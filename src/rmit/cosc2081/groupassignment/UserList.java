@@ -662,13 +662,10 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
         double lon2 = destinationPort.getLongitude();
         System.out.println("lon2: " + lon2);
 
-
         double dlat = lat2 - lat1;
         double dlon = lon2 - lon1;
-        double dPort = Math.sqrt(Math.pow(dlat, 2) + Math.pow(dlon, 2));
 
-
-        return dPort;
+        return Math.sqrt(Math.pow(dlat, 2) + Math.pow(dlon, 2));
     }
 
     public void loadContainerToVehicle(ArrayList<Vehicle> vehicles, ArrayList<Container> allContainers) {
