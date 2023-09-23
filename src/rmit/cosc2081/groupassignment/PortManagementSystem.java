@@ -21,7 +21,9 @@ public class PortManagementSystem {
     private static void printMenu() {
         System.out.println("COSC2081 GROUP ASSIGNMENT\nCONTAINER PORT MANAGERMENT SYSTEM\n" +
                 "Instructor: Mr.Minh Vu & Dr.Phong Ngo\nGroup: Team 29\nS3891919, Nguyen A Luy\n" +
-                "S3916893, Tang Khanh Linh");
+                "S3916893, Tang Khanh Linh\n" +
+                "S3893444, Ho Dac Quang Minh\n" +
+                "S3965530, Nguyen Tuan Duong");
         System.out.println("USER LOGIN (SELECT NUMBER): ");
         System.out.println("1. LOGIN");
         System.out.println("0. Quit");
