@@ -13,7 +13,7 @@ import static rmit.cosc2081.groupassignment.UserList.*;
 import static rmit.cosc2081.groupassignment.Vehicle.clearVehicles;
 import static rmit.cosc2081.groupassignment.Vehicle.readVehiclesFromFile;
 
-public class PortManagementSystem {
+public class Main{
     public static void main(String[] args) {
         doMenu();
     }
