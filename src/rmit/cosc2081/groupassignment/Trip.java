@@ -9,6 +9,7 @@ import java.util.Random;
 import java.util.Scanner;
 
 import static rmit.cosc2081.groupassignment.Port.findPortByID;
+import static rmit.cosc2081.groupassignment.UserList.*;
 import static rmit.cosc2081.groupassignment.Vehicle.findVehicleByID;
 
 
@@ -105,12 +106,13 @@ public class Trip implements TripInterface{
 
     public static Trip updateTripInformation(ArrayList<Trip> trips, ArrayList<Vehicle> vehicles, ArrayList<Port> ports) {
         Scanner scanner = new Scanner(System.in);
+        System.out.println("================= Update Trip ==================");
         System.out.println("Enter the Trip ID to update that Trip: ");
         String tripID = scanner.nextLine();
         Trip trip = findTripByID(tripID, trips);
 
         if (trip == null) {
-            System.out.println("Error: Trip not found. Update failed.");
+            System.out.println(YELLOW_TEXT + BLACK_BG + "Trip not found. Update failed." + RESET);
             return null;
         }
 
@@ -119,7 +121,7 @@ public class Trip implements TripInterface{
         Vehicle newVehicle = findVehicleByID(newVehicleID, vehicles);
 
         if (newVehicle == null) {
-            System.out.println("Error: Vehicle not found. Update failed.");
+            System.out.println(YELLOW_TEXT + BLACK_BG + "Vehicle not found. Update failed." + RESET);
             return null;
         }
 
@@ -128,7 +130,7 @@ public class Trip implements TripInterface{
         Port newDeparturePort = findPortByID(newDeparturePortID, ports);
 
         if (newDeparturePort == null) {
-            System.out.println("Error: Departure port not found. Update failed.");
+            System.out.println(YELLOW_TEXT + BLACK_BG + "Departure port not found. Update failed." + RESET);
             return null;
         }
 
@@ -137,11 +139,11 @@ public class Trip implements TripInterface{
         Port newArrivalPort = findPortByID(newArrivalPortID, ports);
 
         if (newArrivalPort == null) {
-            System.out.println("Error: Arrival port not found. Update failed.");
+            System.out.println(YELLOW_TEXT + BLACK_BG + "Arrival port not found. Update failed."+ RESET);
             return null;
         }
         if (!isPortAccessibleByVehicle(newVehicle, newDeparturePort) || !isPortAccessibleByVehicle(newVehicle, newArrivalPort)) {
-            System.out.println("Error: Vehicle cannot access one or both of the specified ports.");
+            System.out.println(YELLOW_TEXT + BLACK_BG + "Vehicle cannot access one or both of the specified ports."+ RESET);
             return null;
         }
 
@@ -152,12 +154,12 @@ public class Trip implements TripInterface{
         String newArrivalDate = scanner.nextLine();
 
         if (!isDateBefore(newDepartureDate, newArrivalDate)) {
-            System.out.println("Error: Departure date must be before the arrival date.");
+            System.out.println(YELLOW_TEXT + BLACK_BG + "Departure date must be before the arrival date." + RESET);
             return null;
         }
 
         if (newDeparturePort.getPortID().equalsIgnoreCase(newArrivalPort.getPortID())) {
-            System.out.println("Error: Departure port cannot be the same as the arrival port.");
+            System.out.println(YELLOW_TEXT + BLACK_BG + "Departure port cannot be the same as the arrival port." + RESET);
             return null;
         }
 
@@ -166,7 +168,7 @@ public class Trip implements TripInterface{
         trip.setArrivalPort(newArrivalPort);
         trip.setDepartureDate(newDepartureDate);
         trip.setArrivalDate(newArrivalDate);
-
+        System.out.println("=================== END ====================");
         return trip;
     }
 
@@ -200,7 +202,7 @@ public class Trip implements TripInterface{
 
     public static Trip createTrip(ArrayList<Port> ports, ArrayList<Vehicle> vehicles) {
         Scanner scan = new Scanner(System.in);
-        System.out.println("-----------ADD NEW TRIP-------------");
+        System.out.println("================= Add New Trip ==================");
         Vehicle vehicle = null;
         Port departurePort = null;
         Port arrivalPort = null;
@@ -212,7 +214,7 @@ public class Trip implements TripInterface{
             String vehicleID = scan.nextLine();
             vehicle = findVehicleByID(vehicleID, vehicles);
             if (vehicle == null) {
-                System.out.println("Vehicle not found. Please Check Vehicle ID.");
+                System.out.println(YELLOW_TEXT + BLACK_BG + "Vehicle not found. Please Check Vehicle ID." + RESET);
             }
         } while (vehicle == null);
 
@@ -221,7 +223,7 @@ public class Trip implements TripInterface{
             String portDepartureID = scan.nextLine();
             departurePort = findPortByID(portDepartureID, ports);
             if (departurePort == null) {
-                System.out.println("Departure Port not found. Please Check Port Departure ID.");
+                System.out.println(YELLOW_TEXT + BLACK_BG + "Departure Port not found. Please Check Port Departure ID." + RESET);
             }
         } while (departurePort == null);
 
@@ -230,7 +232,7 @@ public class Trip implements TripInterface{
             String portArrivalID = scan.nextLine();
             arrivalPort = findPortByID(portArrivalID, ports);
             if (arrivalPort == null) {
-                System.out.println("Arrival Port not found. Please Check Port Arrival ID.");
+                System.out.println(YELLOW_TEXT + BLACK_BG + "Arrival Port not found. Please Check Port Arrival ID." + RESET);
             }
         } while (arrivalPort == null);
 
@@ -238,7 +240,7 @@ public class Trip implements TripInterface{
         String departureDate = scan.nextLine();
         System.out.println("Please enter Arrival Date (dd-mm-yyyy): ");
         String arrivalDate = scan.nextLine();
-
+        System.out.println("==================== END =====================");
         return new Trip(tripID,vehicle, departureDate, arrivalDate, departurePort, arrivalPort, "INPROGRESS");
     }
 

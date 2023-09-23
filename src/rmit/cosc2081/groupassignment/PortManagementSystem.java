@@ -9,6 +9,7 @@ import static rmit.cosc2081.groupassignment.Port.clearPorts;
 import static rmit.cosc2081.groupassignment.Port.readPortsFromFile;
 import static rmit.cosc2081.groupassignment.Trip.clearTrips;
 import static rmit.cosc2081.groupassignment.Trip.readTripFromFile;
+import static rmit.cosc2081.groupassignment.UserList.*;
 import static rmit.cosc2081.groupassignment.Vehicle.clearVehicles;
 import static rmit.cosc2081.groupassignment.Vehicle.readVehiclesFromFile;
 
@@ -19,7 +20,8 @@ public class PortManagementSystem {
 
     private static void printMenu() {
         System.out.println("COSC2081 GROUP ASSIGNMENT\nCONTAINER PORT MANAGERMENT SYSTEM\n" +
-                "Instructor: Mr.Minh Vu & Dr.Phong Ngo\nGroup: Team 29\nS3891919, Nguyen A Luy");
+                "Instructor: Mr.Minh Vu & Dr.Phong Ngo\nGroup: Team 29\nS3891919, Nguyen A Luy\n" +
+                "S3916893, Tang Khanh Linh");
         System.out.println("USER LOGIN (SELECT NUMBER): ");
         System.out.println("1. LOGIN");
         System.out.println("0. Quit");
@@ -54,19 +56,19 @@ public class PortManagementSystem {
                     String password = scan.nextLine();
                     authenticatedUser = users.authenticate(username, password, ports);
                     if (authenticatedUser == null) {
-                        System.out.println("Please try again.");
+                        System.out.println(YELLOW_TEXT+ BLACK_BG +"Login Not Successfully, Please Try Again!!!" + RESET);
                     } else {
                         if (authenticatedUser.getRole().equalsIgnoreCase("admin")) {
                             users.showAdminTasks(trips, ports, vehicles, containers);
                         } else if (authenticatedUser.getRole().equalsIgnoreCase("manager") && authenticatedUser instanceof PortManager portManager) {
                             Port port = portManager.getPort();
                             if (port == null) {
-                                System.out.println("You must assign a port to perform actions. Please assign a port first.");
+                                System.out.println(YELLOW_TEXT+ BLACK_BG + "You must assign a port to perform actions. Please assign a port first."+ RESET);
                             } else {
                                 users.showManagerTasks(port.getPortID(), ports, containers, trips, vehicles);
                             }
                         } else {
-                            System.out.println("You do not have sufficient permissions.");
+                            System.out.println(YELLOW_TEXT + BLACK_BG + "You do not have sufficient permissions." + RESET);
                         }
                     }
                 }
@@ -75,7 +77,7 @@ public class PortManagementSystem {
                     break;
                 }
                 default -> {
-                    System.out.println("Wrong Input, Try again!!!");
+                    System.out.println(YELLOW_TEXT + BLACK_BG + "Wrong Input Number, Please Check Your Input!!!" + RESET);
                 }
             }
         } while (flag);

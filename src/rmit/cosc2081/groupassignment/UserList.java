@@ -3,10 +3,7 @@ package rmit.cosc2081.groupassignment;
 import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Scanner;
+import java.util.*;
 
 import static rmit.cosc2081.groupassignment.Port.*;
 import static rmit.cosc2081.groupassignment.Trip.updateFileTrip;
@@ -15,6 +12,12 @@ import static rmit.cosc2081.groupassignment.Vehicle.findVehicleByID;
 import static rmit.cosc2081.groupassignment.Vehicle.updateFileVehicle;
 
 public class UserList implements ContainerManagement, PortManagement, TripManagement, ManagerModifiable, AuthenticationConfigurable{
+    final static String RESET = "\u001B[0m";
+    final static String GREEN_TEXT = "\u001B[32m";
+    final static String YELLOW_TEXT = "\u001B[33m";
+    final static String BLACK_BG = "\u001B[40m";
+    final static String WHITE_BG = "\u001B[47m";
+    final static String BLUE_TEXT = "\u001b[34m";
     //1. attribute
     private ArrayList<PortManager> listOfManagers;
     //2. constructor
@@ -35,64 +38,66 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
 
     //4. input, output
     private void printAdminMenu() {
-        System.out.println("1. Add New Port Manager");
-        System.out.println("2. View All Port Managers");
-        System.out.println("3. Remove Port Manager By Username");
-        System.out.println("4. Show Container Menu");
-        System.out.println("5. Show Vehicle Menu");
-        System.out.println("6. Show Port Menu");
-        System.out.println("7. Show Trip Menu");
-        System.out.println("0. Exit");
+        System.out.println(BLUE_TEXT + "1. Add New Port Manager\n" +
+                "2. View All Port Managers\n" +
+                "3. Remove Port Manager By Username\n" +
+                "4. Show Container Menu\n" +
+                "5. Show Vehicle Menu\n" +
+                "6. Show Port Menu\n" +
+                "7. Show Trip Menu\n" +
+                "0. Exit" + RESET);
     }
 
     private void printManagerMenu() {
-        System.out.println("1. Show Container Menu");
-        System.out.println("2. Show List Of Vehicle Of Manager");
-        System.out.println("3. List Ship(s) In Manager Port");
-        System.out.println("4. List Trip(s) For A Day");
-        System.out.println("5. List Trip(s) From Day A To Day B");
-        System.out.println("6. Load Container On A Vehicle In Manager Port");
-        System.out.println("7. Unload Container On A Vehicle In Manager Port");
-        System.out.println("8. Move To Port");
-        System.out.println("0. Exit");
+        System.out.println(BLUE_TEXT + "1. Show Container Menu\n" +
+                "2. Show List Of Vehicle Of Manager\n" +
+                "3. List Ship(s) In Manager Port\n" +
+                "4. List Trip(s) For A Day\n" +
+                "5. List Trip(s) From Day A To Day B\n" +
+                "6. Load Container On A Vehicle In Manager Port\n" +
+                "7. Unload Container On A Vehicle In Manager Port\n" +
+                "8. Move To Port\n" +
+                "0. Exit" + RESET);
+
     }
 
     private void printContainerMenu() {
-        System.out.println("1. Add New Container");
-        System.out.println("2. View All Containers");
-        System.out.println("3. Remove Container By ID");
-        System.out.println("4. Calculate Weight Of Each Container Type");
-        System.out.println("0. Exit Container Menu");
+        System.out.println(BLUE_TEXT + "1. Add New Container\n" +
+                "2. View All Containers\n" +
+                "3. Remove Container By ID\n" +
+                "4. Calculate Weight Of Each Container Type\n" +
+                "0. Exit Container Menu" + RESET);
+
     }
 
     private void printVehicleMenu() {
-        System.out.println("1. Add New Vehicle");
-        System.out.println("2. View All Vehicle");
-        System.out.println("3. Remove Vehicle By ID");
-        System.out.println("4. Load Container To Vehicle");
-        System.out.println("5. Unload Container From Vehicle");
-        System.out.println("6. Move To Port");
-        System.out.println("7. Refuel Vehicle");
-        System.out.println("0. Exit Vehicle Menu");
+        System.out.println(BLUE_TEXT + "1. Add New Vehicle\n" +
+                "2. View All Vehicle\n" +
+                "3. Remove Vehicle By ID\n" +
+                "4. Load Container To Vehicle\n" +
+                "5. Unload Container From Vehicle\n" +
+                "6. Move To Port\n" +
+                "7. Refuel Vehicle\n" +
+                "0. Exit Vehicle Menu" + RESET);
     }
 
     private void printPortMenu() {
-        System.out.println("1. Add New Port");
-        System.out.println("2. View All Ports");
-        System.out.println("3. Remove Port By ID");
-        System.out.println("4. List All Ships In A Port");
-        System.out.println("5. List All Trucks In A Port");
-        System.out.println("0. Exit Vehicle Menu");
+        System.out.println(BLUE_TEXT + "1. Add New Port\n" +
+                "2. View All Ports\n" +
+                "3. Remove Port By ID\n" +
+                "4. List All Ships In A Port\n" +
+                "5. List All Trucks In A Port\n" +
+                "0. Exit Vehicle Menu" + RESET);
     }
 
     private void printTripMenu() {
-        System.out.println("1. Add New Trip");
-        System.out.println("2. View All Trips");
-        System.out.println("3. View Trips By Given Day");
-        System.out.println("4. View Trips By From Day A to Day B");
-        System.out.println("5. Update Trip Information");
-        System.out.println("6. Calculate Fuel Consumption In A Day");
-        System.out.println("0. Exit Vehicle Menu");
+        System.out.println(BLUE_TEXT + "1. Add New Trip\n" +
+                "2. View All Trips\n" +
+                "3. View Trips By Given Day\n" +
+                "4. View Trips By From Day A to Day B\n" +
+                "5. Update Trip Information\n" +
+                "6. Calculate Fuel Consumption In A Day\n" +
+                "0. Exit Vehicle Menu" + RESET);
     }
 
     public void showManagerTasks(String managerPortID, ArrayList<Port> ports, ArrayList<Container> containers, ArrayList<Trip> trips, ArrayList<Vehicle> vehicles) {
@@ -208,12 +213,10 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
                 }
                 case 6 -> {
                     if (canMoveToPort(vehicles, ports, trips)) {
-                        System.out.println("Move to Port Successfully");
+                        System.out.println(GREEN_TEXT + WHITE_BG + "Move to Port Successfully" + RESET);
                         updateFileVehicle(vehicles);
                         updateFilePort(ports);
                         updateFileTrip(trips);
-                    } else {
-                        System.out.println("Cannot Move to Port. Please check your input again!!!");
                     }
                 }
                 case 7 -> {
@@ -221,7 +224,7 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
                     updateFileVehicle(vehicles);
                 }
                 case 0 -> flag = false;
-                default -> System.out.println("Please enter the valid option!!!");
+                default -> System.out.println(YELLOW_TEXT + BLACK_BG + "Please enter the valid option!!!" + RESET);
             }
         } while (flag);
     }
@@ -254,7 +257,7 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
                     listTrucksInAPort(ports);
                 }
                 case 0 -> flag = false;
-                default -> System.out.println("Please enter the valid option!!!");
+                default -> System.out.println(YELLOW_TEXT + BLACK_BG + "Please enter the valid option!!!" + RESET);
             }
         } while (flag);
     }
@@ -299,7 +302,7 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
                     calculateTotalFuelConsumptionInADay(trips);
                 }
                 case 0 -> flag = false;
-                default -> System.out.println("Please enter the valid option!!!");
+                default -> System.out.println(YELLOW_TEXT + BLACK_BG + "Please enter the valid option!!!" + RESET);
             }
         } while (flag);
     }
@@ -328,7 +331,7 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
                     calculateWeightEachContainerType(containers);
                 }
                 case 0 -> flag = false;
-                default -> System.out.println("Please enter the valid option!!!");
+                default -> System.out.println(YELLOW_TEXT + BLACK_BG + "Please enter the valid option!!!" + RESET);
             }
         } while (flag);
     }
@@ -403,12 +406,12 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
             portID = scan.nextLine();
 
             if (!portID.toLowerCase().startsWith("p")) {
-                System.out.println("Invalid port ID format. Must start with 'P'!!!");
+                System.out.println(YELLOW_TEXT + BLACK_BG +"Invalid port ID format. Must start with 'P'!!!"+RESET);
             } else {
                 port = findPortByID(portID, ports);
 
                 if (port == null) {
-                    System.out.println("Port not found. Please enter a valid ID.");
+                    System.out.println(YELLOW_TEXT + BLACK_BG +"Port not found. Please enter a valid ID." +RESET);
                 }
             }
         } while (port == null);
@@ -434,12 +437,12 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
             portID = scan.nextLine();
 
             if (!portID.toLowerCase().startsWith("p")) {
-                System.out.println("Invalid port ID format. Must start with 'P'!!!");
+                System.out.println(YELLOW_TEXT + BLACK_BG +"Invalid port ID format. Must start with 'P'!!!" + RESET);
             } else {
                 port = findPortByID(portID, ports);
 
                 if (port == null) {
-                    System.out.println("Port not found. Please enter a valid ID.");
+                    System.out.println(YELLOW_TEXT + BLACK_BG +"Port not found. Please enter a valid ID." + RESET);
                 }
             }
         } while (port == null);
@@ -489,7 +492,7 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
             }
 
             if (!validDate) {
-                System.out.println("No trips found for the entered date.");
+                System.out.println(YELLOW_TEXT + BLACK_BG +"No trips found for the entered date."+RESET);
             }
 
         } while (!validDate);
@@ -499,7 +502,7 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
 
     public void refuelVehicle(ArrayList<Vehicle> vehicles) {
         Scanner scan = new Scanner(System.in);
-        System.out.println("----------REFUEL VEHICLE----------");
+        System.out.println("================ Refuel Vehicle ================");
 
         String vehicleID;
         Vehicle vehicle = null;
@@ -507,21 +510,22 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
             System.out.println("Please input Vehicle ID (must start with 'sh' or 'tr'): ");
             vehicleID = scan.nextLine();
             if (!vehicleID.toLowerCase().startsWith("sh") && !vehicleID.toLowerCase().startsWith("tr")) {
-                System.out.println("Invalid vehicle ID format. Must start with 'sh' or 'tr'!!!");
+                System.out.println(YELLOW_TEXT + BLACK_BG + "Invalid vehicle ID format. Must start with 'sh' or 'tr'!!!" + RESET);
             } else {
                 vehicle = findVehicleByID(vehicleID, vehicles);
                 if (vehicle == null) {
-                    System.out.println("Vehicle not found. Please enter a valid ID.");
+                    System.out.println(YELLOW_TEXT + BLACK_BG + "Vehicle not found. Please enter a valid ID." + RESET);
                 }
             }
         } while (vehicle == null);
         vehicle.setFuelAmount(vehicle.getFuelCapability());
-        System.out.println("Vehicle is successfully refuel TO FULL.");
+        System.out.println(GREEN_TEXT + WHITE_BG + "Vehicle is successfully refuel TO FULL." + RESET);
+        System.out.println("=================== END ===================");
     }
 
     public boolean canMoveToPort(ArrayList<Vehicle> vehicles, ArrayList<Port> ports, ArrayList<Trip> trips) {
         Scanner scan = new Scanner(System.in);
-        System.out.println("----------MOVE TO THE PORT----------");
+        System.out.println("============= Move To Another Port =============");
 
         while (true) {
             String vehicleID;
@@ -536,11 +540,11 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
                 }
 
                 if (!vehicleID.toLowerCase().startsWith("sh") && !vehicleID.toLowerCase().startsWith("tr")) {
-                    System.out.println("Invalid vehicle ID format. Must start with 'sh' or 'tr'!!!");
+                    System.out.println(YELLOW_TEXT + BLACK_BG + "Invalid vehicle ID format. Must start with 'sh' or 'tr'!!!" + RESET);
                 } else {
                     vehicle = findVehicleByID(vehicleID, vehicles);
                     if (vehicle == null) {
-                        System.out.println("Vehicle not found. Please enter a valid ID.");
+                        System.out.println(YELLOW_TEXT + BLACK_BG + "Vehicle not found. Please enter a valid ID." + RESET);
                     }
                 }
             } while (vehicle == null);
@@ -557,17 +561,17 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
                 }
 
                 if (!portID.toLowerCase().startsWith("p")) {
-                    System.out.println("Invalid port ID format. Must start with 'p'!!!");
+                    System.out.println(YELLOW_TEXT + BLACK_BG + "Invalid port ID format. Must start with 'p'!!!" + RESET);
                 } else {
                     destinationPort = findPortByID(portID, ports);
                     if (destinationPort == null) {
-                        System.out.println("Port not found. Please enter a valid ID.");
+                        System.out.println(YELLOW_TEXT + BLACK_BG + "Port not found. Please enter a valid ID." + RESET);
                     }
                 }
             } while (destinationPort == null);
 
-            if (!destinationPort.isLandingAbility()) {
-                System.out.println("Error: The destination port does not have landing ability.");
+            if (!destinationPort.isLandingAbility() && vehicle instanceof Truck) {
+                System.out.println(YELLOW_TEXT + BLACK_BG + "The destination port does not mark 'landing' for Truck." +RESET);
                 return false;
             }
 
@@ -582,13 +586,14 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
                     .sum();
 
             if (totalWeight > vehicle.getCarryingCapability()) {
-                System.out.println("Error: The total weight of loaded containers exceeds the vehicle's carrying capacity.");
+                System.out.println(YELLOW_TEXT + BLACK_BG + "The total weight of loaded containers exceeds the vehicle's carrying capacity." + RESET);
                 return false;
             }
 
             double estimatedFuelConsumption = calculateEstimatedFuelConsumption(destinationPort, currentLatitude, currentLongitude, vehicle);
+            System.out.println("Estimated Fuel Consumption = " + estimatedFuelConsumption);
             if (vehicle.getFuelCapability() < estimatedFuelConsumption || vehicle.getFuelAmount() < estimatedFuelConsumption) {
-                System.out.println("Error: Insufficient fuel capacity Or amount for the trip.");
+                System.out.println(YELLOW_TEXT + BLACK_BG + "Insufficient fuel capacity Or amount for the trip." + RESET);
                 return false;
             }
             System.out.println(estimatedFuelConsumption);
@@ -602,8 +607,11 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
             destinationPort.getVehicles().add(vehicle);
             Trip associatedTrip = findTripByVehicle(vehicle, trips);
             if (associatedTrip != null) {
-                associatedTrip.setStatus("Completed");
+                associatedTrip.setStatus("COMPLETED");
             }
+            updateFileVehicle(vehicles);
+            updateFilePort(ports);
+            updateFileTrip(trips);
             System.out.print("Do you want to continue? (yes/no): ");
             String continueOption = scan.nextLine();
             if (!continueOption.equalsIgnoreCase("yes")) {
@@ -646,21 +654,17 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
         System.out.println("fuel consumption rate: " + fuelConsumptionRate);
 
         double distanceToDestination = calculateDistanceToPort(currentLatitude, currentLongitude, destinationPort);
-        System.out.println(distanceToDestination);
+        System.out.println("Distance to Destination: " + distanceToDestination);
         return fuelConsumptionRate * totalWeight * distanceToDestination;
     }
 
     private double calculateDistanceToPort(double currentLatitude, double currentLongitude, Port destinationPort) {
 
         double lat1 = currentLatitude;
-        System.out.println("lat1: " + lat1);
         double lon1 = currentLongitude;
-        System.out.println("lon1: " + lon1);
 
         double lat2 = destinationPort.getLatitude();
-        System.out.println("lat2: " + lat2);
         double lon2 = destinationPort.getLongitude();
-        System.out.println("lon2: " + lon2);
 
         double dlat = lat2 - lat1;
         double dlon = lon2 - lon1;
@@ -670,7 +674,7 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
 
     public void loadContainerToVehicle(ArrayList<Vehicle> vehicles, ArrayList<Container> allContainers) {
         Scanner scan = new Scanner(System.in);
-        System.out.println("----------ADD CONTAINER TO VEHICLE----------");
+        System.out.println("============== Load Container On Vehicle ==============");
 
         String vehicleID;
         Vehicle vehicle = null;
@@ -679,11 +683,11 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
             System.out.println("Please input Vehicle ID (must start with 'sh' or 'tr'): ");
             vehicleID = scan.nextLine();
             if (!vehicleID.toLowerCase().startsWith("sh") && !vehicleID.toLowerCase().startsWith("tr")) {
-                System.out.println("Invalid vehicle ID format. Must start with 'sh' or 'tr'!!!");
+                System.out.println(YELLOW_TEXT + BLACK_BG + "Invalid vehicle ID format. Must start with 'sh' or 'tr'!!!" +RESET);
             } else {
                 vehicle = findVehicleByID(vehicleID, vehicles);
                 if (vehicle == null) {
-                    System.out.println("Vehicle not found. Please enter a valid ID.");
+                    System.out.println(YELLOW_TEXT + BLACK_BG + "Vehicle not found. Please enter a valid ID." + RESET);
                 }
             }
         } while (vehicle == null);
@@ -711,13 +715,13 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
                             System.out.println("Container with ID " + containerID + " added to the vehicle.");
                             break;
                         } else {
-                            System.out.println("Container with ID " + containerID + " is NOT suitable for this vehicle.");
+                            System.out.println(YELLOW_TEXT + BLACK_BG + "Container with ID " + containerID + " is NOT suitable for this vehicle."+ RESET);
                             break;
                         }
                     }
                 }
                 if (!containerFound) {
-                    System.out.println("Container with ID " + containerID + " NOT found or NOT suitable for this vehicle.");
+                    System.out.println(YELLOW_TEXT + BLACK_BG + "Container with ID " + containerID + " NOT found or NOT suitable for this vehicle." + RESET);
                 }
             }
 
@@ -729,7 +733,7 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
 
     public void unloadContainerFromVehicle(ArrayList<Vehicle> vehicles) {
         Scanner scan = new Scanner(System.in);
-        System.out.println("----------UNLOAD CONTAINER FROM VEHICLE----------");
+        System.out.println("============== Unload Container From Vehicle ==============");
 
         String vehicleID;
         Vehicle vehicle = null;
@@ -738,11 +742,11 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
             System.out.println("Please input Vehicle ID (must start with 'sh' or 'tr'): ");
             vehicleID = scan.nextLine();
             if (!vehicleID.toLowerCase().startsWith("sh") && !vehicleID.toLowerCase().startsWith("tr")) {
-                System.out.println("Invalid vehicle ID format. Must start with 'sh' or 'tr'!!!");
+                System.out.println(YELLOW_TEXT + BLACK_BG + "Invalid vehicle ID format. Must start with 'sh' or 'tr'!!!" + RESET);
             } else {
                 vehicle = findVehicleByID(vehicleID, vehicles);
                 if (vehicle == null) {
-                    System.out.println("Vehicle not found. Please enter a valid ID.");
+                    System.out.println(YELLOW_TEXT + BLACK_BG + "Vehicle not found. Please enter a valid ID." +RESET);
                 }
             }
         } while (vehicle == null);
@@ -785,16 +789,16 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
 
     public void removePortManager() {
         Scanner scan = new Scanner(System.in);
-        System.out.println("------------- Remove Port Manager ----------------");
+        System.out.println("============== Remove Port Manager ==============");
         System.out.println("Please enter Username of Manager: ");
         String username = scan.nextLine();
         PortManager manager = findManagerByUsername(username);
         if (manager != null) {
             this.listOfManagers.remove(manager);
             writeToFile();
-            System.out.println("The Manager is removed successfully");
+            System.out.println(GREEN_TEXT + WHITE_BG + "The Manager is removed successfully" + RESET);
         } else {
-            System.out.println("The Username not found");
+            System.out.println(YELLOW_TEXT + BLACK_BG + "The Username not found" + RESET);
         }
     }
 

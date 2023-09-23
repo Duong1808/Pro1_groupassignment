@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static rmit.cosc2081.groupassignment.UserList.*;
+
 public class Container implements ContainerInterface{
     private String type;
     private String containerID;
@@ -61,17 +63,18 @@ public class Container implements ContainerInterface{
 
     public static Container removeContainer(ArrayList<Container> containers){
         Scanner scan = new Scanner(System.in);
-        System.out.println("------------- Remove Container ----------------");
+        System.out.println("=============== Remove Container ===============");
         System.out.println("Please enter Container ID: ");
         String containerID = scan.nextLine();
         Container container = findContainerByID(containerID, containers);
         if (container != null) {
             containers.remove(container);
             updateFileContainer(containers);
-            System.out.println("The Container is removed successfully");
+            System.out.println(GREEN_TEXT + WHITE_BG + "The Container is removed successfully" + RESET);
         } else {
-            System.out.println("The Container not found");
+            System.out.println(YELLOW_TEXT + BLACK_BG + "The Container not found" + RESET);
         }
+        System.out.println("==================== END =====================");
         return container;
     }
 
@@ -97,6 +100,7 @@ public class Container implements ContainerInterface{
 
     public static Container createContainer(ArrayList<Container> containers) {
         Scanner scan = new Scanner(System.in);
+        System.out.println("=============== Create Container ===============");
         String containerID;
         boolean containerExists;
 
@@ -106,7 +110,7 @@ public class Container implements ContainerInterface{
             containerExists = containerExisted(containers, containerID);
 
             if (containerExists) {
-                System.out.println("Container ID already exists. Please choose a different ID.");
+                System.out.println(YELLOW_TEXT + BLACK_BG + "Container ID already exists. Please choose a different ID." + RESET);
             }
         } while (containerExists);
 
@@ -127,11 +131,13 @@ public class Container implements ContainerInterface{
             case 3 -> container = new OpenSideContainer(containerID, weight);
             case 4 -> container = new RefrigeratedContainer(containerID, weight);
             case 5 -> container = new LiquidContainer(containerID, weight);
-            default -> System.out.println("Invalid container type selection.");
+            default -> System.out.println(YELLOW_TEXT + BLACK_BG + "Invalid container type selection." + RESET);
         }
         if (container != null) {
             writeToFileContainer(container);
+            System.out.println(GREEN_TEXT + WHITE_BG + "Create Container Successfully" + RESET);
         }
+        System.out.println("==================== END =====================");
         return container;
     }
 

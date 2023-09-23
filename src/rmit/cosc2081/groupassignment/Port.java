@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static rmit.cosc2081.groupassignment.UserList.*;
+
 public class Port implements PortInterface{
     private String portID;
     private String name;
@@ -126,17 +128,18 @@ public class Port implements PortInterface{
 
     public static Port removePort(ArrayList<Port> ports){
         Scanner scan = new Scanner(System.in);
-        System.out.println("------------- Remove Port ----------------");
+        System.out.println("================ Remove Port =================");
         System.out.println("Please enter Port ID: ");
         String portID = scan.nextLine();
         Port port = findPortByID(portID, ports);
         if (port != null) {
             ports.remove(port);
             updateFilePort(ports);
-            System.out.println("The Port is removed successfully");
+            System.out.println(GREEN_TEXT + WHITE_BG + "The Port is removed successfully" + RESET);
         } else {
-            System.out.println("The Port is not found");
+            System.out.println(YELLOW_TEXT + BLACK_BG + "The Port is not found" + RESET);
         }
+        System.out.println("==================== END =====================");
         return port;
     }
 
@@ -150,14 +153,15 @@ public class Port implements PortInterface{
     }
     public static Port createPort(ArrayList<Port> ports){
         Scanner scan = new Scanner(System.in);
+        System.out.println("================ Create Port =================");
         String portID;
         do {
             System.out.println("Enter the port ID (must start with 'P'): ");
             portID = scan.nextLine();
             if (!portID.toLowerCase().startsWith("p")) {
-                System.out.println("Check port format, Start with 'P'!!!");
+                System.out.println(YELLOW_TEXT + BLACK_BG + "Check port format, Start with 'P'!!!" + RESET);
             } else if (portExisted(ports, portID)) {
-                System.out.println("Port ID already exists. Please choose a different ID.");
+                System.out.println(YELLOW_TEXT + BLACK_BG + "Port ID already exists. Please choose a different ID." + RESET);
             } else {
                 break;
             }
@@ -175,7 +179,9 @@ public class Port implements PortInterface{
         port = new Port(portID,portName,latitude,longitude,storingCapacity,landingAbility);
         if(port != null){
             writeToFilePort(port);
+            System.out.println(GREEN_TEXT + WHITE_BG + "Create Port Successfully" + RESET);
         }
+        System.out.println("==================== END =====================");
         return port;
     }
     public static boolean selectLandingAbility(Scanner scan) {
@@ -193,7 +199,7 @@ public class Port implements PortInterface{
                 return false;
             }
             default -> {
-                System.out.println("Invalid selection. Please choose 1 (Landing) or 2 (Not Landing).");
+                System.out.println(YELLOW_TEXT + BLACK_BG + "Invalid selection. Please choose 1 (Landing) or 2 (Not Landing)." + RESET);
                 return selectLandingAbility(scan);
             }
         }

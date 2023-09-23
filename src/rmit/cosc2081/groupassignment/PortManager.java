@@ -2,12 +2,14 @@ package rmit.cosc2081.groupassignment;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static rmit.cosc2081.groupassignment.Port.findPortByID;
+import static rmit.cosc2081.groupassignment.UserList.*;
 
 public class PortManager extends User{
     static final String PASSWORD_REGEX = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8,20}$";
@@ -47,17 +49,16 @@ public class PortManager extends User{
             if (!usernameExists(managers, username)) {
                 break;
             } else {
-                System.out.println("Username already exists. Please choose a different username.");
+                System.out.println(YELLOW_TEXT + BLACK_BG + "Username already exists. Please choose a different username." + RESET);
             }
         }
-
         while (true) {
             System.out.println("Please input Password: ");
             password = scan.nextLine();
             if (isValidPassword(password)) {
                 break;
             } else {
-                System.out.println("Invalid password format.\nPassword must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8 and 20 characters long.");
+                System.out.println(YELLOW_TEXT + BLACK_BG +"Invalid password format.\nPassword must contain at least one uppercase letter, one lowercase letter, one digit, one special character, and be between 8 and 20 characters long." + RESET);
             }
         }
 
@@ -69,7 +70,7 @@ public class PortManager extends User{
                     .anyMatch(manager -> manager.getPort() != null && manager.getPort().getPortID().equalsIgnoreCase(portID));
 
             if (portIDBelongsToOtherManager) {
-                System.out.println("This port already has a manager. Please choose another port.");
+                System.out.println(YELLOW_TEXT + BLACK_BG + "This port already has a manager. Please choose another port." + RESET);
             } else {
                 Port assignedPort = findPortByID(portID, ports);
 
@@ -77,11 +78,10 @@ public class PortManager extends User{
                     portManager = new PortManager(username, password, assignedPort);
                     break;
                 } else {
-                    System.out.println("Port not found. Please enter a valid Port ID.");
+                    System.out.println(YELLOW_TEXT + BLACK_BG + "Port not found. Please enter a valid Port ID." + RESET);
                 }
             }
         }
-
         System.out.println("==================== END =====================");
         return portManager;
     }

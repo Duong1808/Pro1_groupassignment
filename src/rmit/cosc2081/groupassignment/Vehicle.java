@@ -6,6 +6,7 @@ import java.util.Scanner;
 
 import static rmit.cosc2081.groupassignment.Container.findContainerByID;
 import static rmit.cosc2081.groupassignment.Port.findPortByID;
+import static rmit.cosc2081.groupassignment.UserList.*;
 
 public abstract class Vehicle implements VehicleInterface{
     private String vehicleID;
@@ -97,17 +98,18 @@ public abstract class Vehicle implements VehicleInterface{
 
     public static Vehicle removeVehicle(ArrayList<Vehicle> vehicles) {
         Scanner scan = new Scanner(System.in);
-        System.out.println("------------- Remove Vehicle ----------------");
+        System.out.println("================= Remove Vehicle =================");
         System.out.println("Please enter Vehicle ID: ");
         String vehicleID = scan.nextLine();
         Vehicle vehicle = findVehicleByID(vehicleID, vehicles);
         if (vehicle != null) {
             vehicles.remove(vehicle);
             updateFileVehicle(vehicles);
-            System.out.println("The Vehicle is removed successfully");
+            System.out.println(GREEN_TEXT + WHITE_BG + "The Vehicle is removed successfully" + RESET);
         } else {
-            System.out.println("The Vehicle not found");
+            System.out.println(YELLOW_TEXT + BLACK_BG + "The Vehicle not found" + RESET);
         }
+        System.out.println("==================== END =====================");
         return vehicle;
     }
 
@@ -122,6 +124,7 @@ public abstract class Vehicle implements VehicleInterface{
 
     public static Vehicle createVehicle(ArrayList<Vehicle> vehicles) {
         Scanner scan = new Scanner(System.in);
+        System.out.println("==================== Create Vehicle =====================");
         String vehicleID;
         do {
             System.out.println("Enter the vehicle ID (must start with 'sh' or 'tr'): ");
@@ -170,8 +173,10 @@ public abstract class Vehicle implements VehicleInterface{
         }
         if(vehicle != null){
             writeToFileVehicle(vehicle);
+            System.out.println(GREEN_TEXT + WHITE_BG + "Create New Vehicle Successfully" + RESET);
+            vehicles.add(vehicle);
         }
-        vehicles.add(vehicle);
+        System.out.println("==================== END =====================");
         return vehicle;
     }
 
