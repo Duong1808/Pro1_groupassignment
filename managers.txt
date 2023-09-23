@@ -1,4 +1,4 @@
-portmanager01 Password1@ P01
+portmanager01 Password1@ manager P01
 portmanager02 Abcdef1$ manager P02
 portmanager03 SecureP@ss manager P03
 portmanager04 P@ssw0rd12345 manager P04

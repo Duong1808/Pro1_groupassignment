@@ -63,7 +63,6 @@ interface UserInterface {
 
 interface AuthenticationConfigurable {
     User authenticate(String username, String password, ArrayList<Port> ports);
-    void clearTripsFile();
     void updateLastLoginDate(String lastLoginFile);
     boolean isMoreThan7DaysSinceLastLogin(String lastLoginFile);
 }

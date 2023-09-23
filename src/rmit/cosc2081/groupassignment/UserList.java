@@ -11,7 +11,7 @@ import static rmit.cosc2081.groupassignment.Trip.writeToFileTrip;
 import static rmit.cosc2081.groupassignment.Vehicle.findVehicleByID;
 import static rmit.cosc2081.groupassignment.Vehicle.updateFileVehicle;
 
-public class UserList implements ContainerManagement, PortManagement, TripManagement, ManagerModifiable, AuthenticationConfigurable{
+public class UserList implements ContainerManagement, PortManagement, TripManagement, VehicleManagement, ManagerModifiable, AuthenticationConfigurable{
     final static String RESET = "\u001B[0m";
     final static String GREEN_TEXT = "\u001B[32m";
     final static String YELLOW_TEXT = "\u001B[33m";
@@ -795,17 +795,18 @@ public class UserList implements ContainerManagement, PortManagement, TripManage
         PortManager manager = findManagerByUsername(username);
         if (manager != null) {
             this.listOfManagers.remove(manager);
-            writeToFile();
+            writeToFileManager();
+            manager.getPort().setPortManager(null);
             System.out.println(GREEN_TEXT + WHITE_BG + "The Manager is removed successfully" + RESET);
         } else {
             System.out.println(YELLOW_TEXT + BLACK_BG + "The Username not found" + RESET);
         }
     }
 
-    public void writeToFile() {
+    public void writeToFileManager() {
         try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("managers.txt"))) {
             for (PortManager manager : this.listOfManagers) {
-                bufferedWriter.write(manager.getUsername() + " " + manager.getPassword() + " " + manager.getRole() + "\n");
+                bufferedWriter.write(manager.getUsername() + " " + manager.getPassword() + " " + manager.getRole() + " " + manager.getPort().getPortID() + "\n");
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -321,3 +321,7 @@ interface VehicleInterface {
     void setCurrentPort(Port port);
     void setContainers(ArrayList<Container> containers);
 }
+
+interface VehicleManagement{
+    void refuelVehicle(ArrayList<Vehicle> vehicles);
+}

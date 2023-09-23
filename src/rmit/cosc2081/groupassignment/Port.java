@@ -16,7 +16,6 @@ public class Port implements PortInterface{
     private ArrayList<Vehicle> vehicles;
     private ArrayList<Container> containers;
     private ArrayList<Trip> trips;
-
     private PortManager portManager;
 
     public Port(String id, String name, double latitude, double longitude, double storingCapacity, boolean landingAbility) {
@@ -292,5 +291,4 @@ interface PortManagement {
     void listTrucksInAPort(ArrayList<Port> ports);
     void listShipsInAPort(ArrayList<Port> ports);
     boolean canMoveToPort(ArrayList<Vehicle> vehicles, ArrayList<Port> ports, ArrayList<Trip> trips);
-    void refuelVehicle(ArrayList<Vehicle> vehicles);
 }
